@@ -1,6 +1,8 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
+val ktor_version: String by extra("2.3.8")
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
@@ -36,9 +38,13 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("io.ktor:ktor-client-android:$ktor_version")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+        }
+        iosMain.dependencies {
+            implementation("io.ktor:ktor-client-ios:$ktor_version")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -51,6 +57,12 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+                implementation("io.ktor:ktor-client-core:$ktor_version")
+                implementation("io.ktor:ktor-client-json:$ktor_version")
+                implementation("io.ktor:ktor-client-serialization:$ktor_version")
+                implementation("io.ktor:ktor-client-cio:$ktor_version")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
             }
         }
     }
@@ -98,6 +110,7 @@ android {
 dependencies {
     implementation(libs.androidx.ui.graphics.android)
     implementation(libs.places)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 }
 
 compose.desktop {

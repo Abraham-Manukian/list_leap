@@ -1,7 +1,3 @@
-
-
-
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -20,15 +18,31 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dtoSerialization.TaskDTO
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import io.ktor.util.InternalAPI
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.json.Json
 import org.example.project.ui.AppColors
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
@@ -59,6 +73,7 @@ fun App() {
         MainScreenTopBar()
         OverdueScreen()
         TodayTaskScreen()
+        TasksScreen()
     }
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -125,6 +140,23 @@ fun TodayTaskScreen(){
         )
     }
 }
+
+@Composable
+fun TasksScreen(tasksRepository: TasksRepository = remember { TasksRepository() }) {
+    // Подписываемся на изменения списка задач
+    val tasks by tasksRepository.tasks.collectAsState()
+
+    // Запрашиваем задачи при первом рендеринге компонента
+    LaunchedEffect(Unit) {
+        tasksRepository.loadTasks()
+    }
+
+    LazyColumn {
+        items(tasks) { task ->
+            Text(text = "Задача: ${task.id_task}")
+        }
+    }
+}
 @Composable
 fun AddButton(){
     Box(
@@ -144,14 +176,22 @@ fun AddButton(){
     }
 }
 
-@Composable
-fun ToolMenu(){
-    Column(
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.Start
-    )
-    {
+suspend fun fetchTasks(): List<TaskDTO> {
+    val response: HttpResponse = httpClient.get("http://localhost:8080/tasks")
+    if (response.status == HttpStatusCode.OK) {
+        val responseBody = response.bodyAsText()
+        return Json.decodeFromString(responseBody)
+    } else {
+        // Обработка ошибочных ситуаций или неверного статуса ответа
+        throw Exception("Failed to fetch tasks: ${response.status}")
+    }
+}
 
+@OptIn(InternalAPI::class)
+suspend fun addTask(task: TaskDTO) {
+    httpClient.post("http://localhost:8080/tasks") {
+        contentType(ContentType.Application.Json)
+        body = task
     }
 }
 

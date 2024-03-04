@@ -6,6 +6,6 @@ class JVMPlatform: Platform {
 
 actual fun getPlatform(): Platform = JVMPlatform()
 
-actual fun getPlatformSpecificImage(resource: String): Painter {
+actual fun getPlatformSpecificImage(resource: String): Painter =
     // Здесь должна быть реализация загрузки изображения для Desktop
-}
+    Unit

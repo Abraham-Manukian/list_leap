@@ -1,3 +1,4 @@
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -153,7 +154,10 @@ fun TasksScreen(tasksRepository: TasksRepository = remember { TasksRepository() 
 
     LazyColumn {
         items(tasks) { task ->
-            Text(text = "Задача: ${task.id_task}")
+            Text(text = "Задача: ${task.task_name}",
+                color = Color.White,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(16.dp))
         }
     }
 }
@@ -177,19 +181,22 @@ fun AddButton(){
 }
 
 suspend fun fetchTasks(): List<TaskDTO> {
-    val response: HttpResponse = httpClient.get("http://localhost:8080/tasks")
-    if (response.status == HttpStatusCode.OK) {
-        val responseBody = response.bodyAsText()
-        return Json.decodeFromString(responseBody)
-    } else {
-        // Обработка ошибочных ситуаций или неверного статуса ответа
-        throw Exception("Failed to fetch tasks: ${response.status}")
+    try {
+        val response: HttpResponse = httpClient.get("http://10.0.2.2:8080/tasks")
+        if (response.status == HttpStatusCode.OK) {
+            return Json.decodeFromString(response.bodyAsText())
+        } else {
+            throw Exception("Failed to fetch tasks: ${response.status}, ${response.bodyAsText()}")
+        }
+    } catch (e: Exception) {
+        e.printStackTrace() // Вывести подробности ошибки
+        throw e
     }
 }
 
 @OptIn(InternalAPI::class)
 suspend fun addTask(task: TaskDTO) {
-    httpClient.post("http://localhost:8080/tasks") {
+    httpClient.post("http://10.0.2.2:8080/api/tasks") {
         contentType(ContentType.Application.Json)
         body = task
     }

@@ -36,6 +36,8 @@ androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graph
 places = { group = "com.google.android.libraries.places", name = "places", version = "3.3.0" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.7.0" }
 androidx-lifecycle-viewmodel-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-android", version = "2.8.0-alpha02" }
+transport-runtime = { group = "com.google.android.datatransport", name = "transport-runtime", version = "3.2.0" }
+androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version = "1.0.0-alpha01" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

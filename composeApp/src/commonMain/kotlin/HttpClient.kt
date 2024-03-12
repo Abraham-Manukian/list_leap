@@ -5,10 +5,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 val httpClient = HttpClient(CIO) {
-    /*install(HttpTimeout) {
-        requestTimeoutMillis = 30000 // Установите подходящее время ожидания, например 30 секунд
-    }*/
-
     install(ContentNegotiation) {
         json(Json {
             ignoreUnknownKeys = true

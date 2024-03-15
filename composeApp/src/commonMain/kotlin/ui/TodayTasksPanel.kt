@@ -25,6 +25,16 @@ fun TodayTasksPanel(tasksRepository: TasksRepository = remember { TasksRepositor
     LaunchedEffect(Unit) {
         tasksRepository.loadTasks()
     }
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(text = "Today tasks",
+            color = Color.White,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
 
     Column(
         verticalArrangement = Arrangement.Top,

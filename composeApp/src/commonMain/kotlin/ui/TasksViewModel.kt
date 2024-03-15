@@ -1,3 +1,5 @@
+package ui
+
 import dtoSerialization.TaskDTO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -6,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import requestsServer.fetchTasks
 
 class TasksRepository {
 

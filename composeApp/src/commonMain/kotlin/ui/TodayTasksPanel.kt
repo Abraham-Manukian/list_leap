@@ -1,6 +1,7 @@
 package ui
 
-import TasksRepository
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -23,6 +25,16 @@ fun TodayTasksPanel(tasksRepository: TasksRepository = remember { TasksRepositor
     // Запрашиваем задачи при первом рендеринге компонента
     LaunchedEffect(Unit) {
         tasksRepository.loadTasks()
+    }
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(text = "Today tasks",
+            color = Color.White,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 
     LazyColumn {

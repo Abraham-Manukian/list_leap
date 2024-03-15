@@ -14,19 +14,12 @@ import androidx.compose.ui.graphics.painter.Painter
 import dtoSerialization.TaskDTO
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
-import io.ktor.client.request.get
 import io.ktor.client.request.post
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.util.InternalAPI
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import requestsServer.httpClient
 
 
 @OptIn(ExperimentalResourceApi::class)
@@ -65,24 +58,11 @@ fun App() {
     {
         ui.ButtonAdd()
     }
-
 }
 
 
 
-suspend fun fetchTasks(): List<TaskDTO> {
-    try {
-        val response: HttpResponse = httpClient.get("http://10.0.2.2:8080/tasks")
-        if (response.status == HttpStatusCode.OK) {
-            return Json.decodeFromString(response.bodyAsText())
-        } else {
-            throw Exception("Failed to fetch tasks: ${response.status}, ${response.bodyAsText()}")
-        }
-    } catch (e: Exception) {
-        e.printStackTrace() // Вывести подробности ошибки
-        throw e
-    }
-}
+
 
 @OptIn(InternalAPI::class)
 suspend fun addTask(task: TaskDTO) {
@@ -92,8 +72,3 @@ suspend fun addTask(task: TaskDTO) {
     }
 }
 
-fun getCurrentDate(): String {
-    val currentMoment = Clock.System.now()
-    val dateTime = currentMoment.toLocalDateTime(TimeZone.currentSystemDefault())
-    return "${dateTime.dayOfMonth}.${dateTime.monthNumber}.${dateTime.year}"
-}

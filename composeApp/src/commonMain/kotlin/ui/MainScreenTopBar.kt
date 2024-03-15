@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import getCurrentDate
 import getPlatformSpecificImage
 import org.example.project.ui.AppColors
 
@@ -20,7 +19,7 @@ fun MainScreenTopBar() {
         backgroundColor = AppColors.primaryDark, // Темный фон для BottomNavigation
         title = {
             Text(
-                text = getCurrentDate(),
+                text = date.getCurrentDate(),
                 color = AppColors.textLight,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(16.dp)

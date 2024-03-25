@@ -19,30 +19,29 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun TodayTasksPanel(tasksRepository: TasksRepository = remember { TasksRepository() }) {
-    // Подписываемся на изменения списка задач
     val tasks by tasksRepository.tasks.collectAsState()
 
     // Запрашиваем задачи при первом рендеринге компонента
     LaunchedEffect(Unit) {
         tasksRepository.loadTasks()
     }
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        Text(text = "Today tasks",
+        Text(
+            text = "Today tasks",
             color = Color.White,
             fontSize = 20.sp,
             modifier = Modifier.padding(16.dp)
         )
-    }
 
-    LazyColumn {
-        items(tasks) { task ->
-            Text(text = "Задача: ${task.task_name}",
-                color = Color.White,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(16.dp))
+        LazyColumn {
+            items(tasks) { task ->
+                ui.todayTaskPanel.TaskItem(task = task) // Здесь мы вызываем TaskItem для каждой задачи
+            }
         }
     }
 }
+

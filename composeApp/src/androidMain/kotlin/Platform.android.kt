@@ -2,6 +2,7 @@ import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import dtoSerialization.TaskDTO
 import org.example.project.R
 
 class AndroidPlatform : Platform {
@@ -18,4 +19,10 @@ actual fun getPlatformSpecificImage(resource: String): Painter {
         else -> R.drawable.icon_back // Backup option
     }
     return painterResource(id = resId)
+}
+
+actual fun TaskItem(
+    task: TaskDTO,
+    onTaskCompletedToggle: (TaskDTO) -> Unit
+) {
 }

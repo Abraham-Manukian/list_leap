@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +21,8 @@ import io.ktor.http.contentType
 import io.ktor.util.InternalAPI
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import requestsServer.httpClient
+import ui.TasksRepository
+import ui.TodayTasksPanel
 
 
 @OptIn(ExperimentalResourceApi::class)
@@ -31,7 +34,7 @@ expect fun getPlatformSpecificImage(resource: String): Painter
 
 
 @Composable
-fun App() {
+fun App(tasksRepository: TasksRepository = remember { TasksRepository() }) {
     val mainButtonColor = ButtonDefaults.buttonColors(
         backgroundColor = Color(color = 0xffffffff),
     )
@@ -47,7 +50,9 @@ fun App() {
     {
         ui.MainScreenTopBar()
         ui.OverdueTaskPanel()
-        ui.TodayTasksPanel()
+        ui.TodayTasksPanel(tasksRepository = tasksRepository)
+        TodayTasksPanel(tasksRepository)
+
 
     }
     Column(
@@ -59,6 +64,8 @@ fun App() {
         ui.ButtonAdd()
     }
 }
+// Объявите expect функцию
+expect fun TaskItem(task: TaskDTO, onTaskCompletedToggle: (TaskDTO) -> Unit)
 
 
 
@@ -71,4 +78,3 @@ suspend fun addTask(task: TaskDTO) {
         body = task
     }
 }
-
